@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>The Base Ubud — Train · Work · Connect</title>
+<meta name="description" content="The Base Ubud is a community gym and coworking space in the heart of Ubud, Bali. Free weights, machines, yoga, AC, café and high-speed WiFi."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ── TOKENS ── */
+:root {
+  --bg:#0C0C0C; --bg2:#111; --surface:#181818; --surface2:#1F1F1F;
+  --orange:#F0621A; --orange-light:#FF7A35; --orange-dark:#C44E12;
+  --text:#F2F2F0; --muted:#888; --muted2:#555;
+  --border:rgba(240,98,26,.18); --border-strong:rgba(240,98,26,.35);
+  --bebas:'Bebas Neue',Impact,sans-serif;
+  --barlow:'Barlow',system-ui,sans-serif;
+  --cond:'Barlow Condensed','Barlow',sans-serif;
+  --maxw:1200px; --radius:8px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--barlow);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* ── PROGRESS BAR ── */
+#progress-bar{
+  position:fixed;top:0;left:0;height:2px;z-index:9999;width:0%;
+  background:linear-gradient(90deg,var(--orange),var(--orange-light));
+  pointer-events:none;transition:width .05s linear;
+}
+
+/* ── TYPE ── */
+h1,h2,h3,h4{margin:0;line-height:1.05}
+h1{font-family:var(--bebas);font-size:clamp(60px,10vw,130px);letter-spacing:.03em;font-weight:400}
+h2{font-family:var(--bebas);font-size:clamp(42px,6vw,82px);letter-spacing:.02em;font-weight:400}
+h3{font-family:var(--cond);font-size:clamp(18px,2vw,26px);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+p{margin:0}
+
+.eyebrow{
+  font-family:var(--barlow);font-size:11px;text-transform:uppercase;
+  letter-spacing:.35em;color:var(--orange);font-weight:600;
+  display:inline-flex;align-items:center;gap:12px;
+}
+.eyebrow::before{content:"";display:inline-block;width:32px;height:1px;background:var(--orange)}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 36px}
+section{padding:110px 0;position:relative}
+
+/* ── BUTTONS ── */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 28px;border-radius:3px;
+  font-family:var(--cond);font-size:14px;letter-spacing:.22em;text-transform:uppercase;
+  font-weight:700;transition:all .3s ease;border:2px solid transparent;
+}
+.btn-orange{background:var(--orange);color:#fff}
+.btn-orange:hover{background:var(--orange-light);transform:translateY(-2px);box-shadow:0 14px 32px -10px rgba(240,98,26,.5)}
+.btn-outline{border:2px solid rgba(255,255,255,.25);color:var(--text)}
+.btn-outline:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  transition:background .4s,backdrop-filter .4s,padding .4s,border-color .4s;
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  background:rgba(12,12,12,.84);
+  backdrop-filter:saturate(160%) blur(16px);
+  -webkit-backdrop-filter:saturate(160%) blur(16px);
+  border-bottom-color:var(--border);
+}
+.nav-inner{
+  max-width:var(--maxw);margin:0 auto;padding:26px 36px;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  transition:padding .4s;
+}
+.nav.scrolled .nav-inner{padding:16px 36px}
+
+.logo{
+  font-family:var(--bebas);font-size:22px;letter-spacing:.18em;
+  display:flex;align-items:center;gap:0;color:var(--text);
+}
+.logo .sep{color:var(--orange);margin:0 8px;font-size:18px;opacity:.7}
+.logo .loc{font-size:15px;letter-spacing:.28em;color:var(--muted)}
+
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{
+  font-family:var(--cond);font-size:13px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;transition:color .25s;position:relative;padding:6px 0;
+}
+.nav-links a:hover{color:var(--text)}
+.nav-links a::after{
+  content:"";position:absolute;left:0;bottom:0;
+  height:1px;width:0;background:var(--orange);transition:width .35s ease;
+}
+.nav-links a:hover::after{width:100%}
+
+.nav-right{display:flex;align-items:center;gap:12px}
+.wa-icon{
+  width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--border-strong);
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--muted);transition:all .3s;
+}
+.wa-icon:hover{color:#25D366;border-color:#25D366;background:rgba(37,211,102,.08)}
+.wa-icon svg{width:17px;height:17px}
+
+.menu-toggle{
+  display:none;width:38px;height:38px;align-items:center;
+  justify-content:center;border:1px solid var(--border);border-radius:4px;
+}
+.menu-toggle span{display:block;width:20px;height:1.5px;background:var(--text);position:relative}
+.menu-toggle span::before,.menu-toggle span::after{
+  content:"";position:absolute;left:0;width:20px;height:1.5px;background:var(--text);
+}
+.menu-toggle span::before{top:-7px}
+.menu-toggle span::after{top:7px}
+
+/* Mobile drawer */
+.drawer{
+  position:fixed;inset:0;background:rgba(12,12,12,.97);backdrop-filter:blur(12px);
+  z-index:200;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:28px;
+  opacity:0;pointer-events:none;transition:opacity .35s;
+}
+.drawer.open{opacity:1;pointer-events:auto}
+.drawer a{
+  font-family:var(--bebas);font-size:42px;letter-spacing:.1em;
+  color:var(--text);transition:color .2s;
+}
+.drawer a:hover{color:var(--orange)}
+.drawer-close{
+  position:absolute;top:24px;right:24px;
+  width:40px;height:40px;border:1px solid var(--border);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--muted);transition:all .2s;
+}
+.drawer-close:hover{color:var(--orange);border-color:var(--orange)}
+
+/* ── HERO ── */
+.hero{
+  height:100vh;min-height:700px;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+}
+.hero-slides{position:absolute;inset:0}
+.hero-slide{
+  position:absolute;inset:-6%;
+  background-size:cover;background-position:center;
+  opacity:0;transition:opacity 1.4s ease;
+  will-change:opacity,transform;
+}
+.hero-slide.active{opacity:1}
+.hero-slide::after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(12,12,12,.62) 0%,rgba(12,12,12,.2) 42%,rgba(12,12,12,.65) 78%,rgba(12,12,12,.97) 100%);
+}
+.hero-content{
+  position:relative;z-index:5;
+  max-width:1050px;padding:0 24px;
+}
+.hero .eyebrow{margin-bottom:28px;justify-content:center}
+.hero h1{color:#fff;text-shadow:0 2px 40px rgba(0,0,0,.4)}
+.hero h1 em{font-style:italic;color:var(--orange)}
+.hero .tagline{
+  font-family:var(--cond);font-size:clamp(14px,2vw,18px);
+  letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(255,255,255,.6);margin-top:20px;margin-bottom:38px;
+}
+.hero-btns{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+
+/* Scroll cue */
+.scroll-cue{
+  position:absolute;left:50%;bottom:36px;transform:translateX(-50%);
+  z-index:5;display:flex;flex-direction:column;align-items:center;gap:10px;
+  color:var(--muted2);font-size:9px;letter-spacing:.42em;text-transform:uppercase;
+  font-family:var(--cond);
+}
+.scroll-cue .sc-line{
+  width:1px;height:52px;
+  background:linear-gradient(180deg,var(--orange),transparent);
+  position:relative;overflow:hidden;
+}
+.scroll-cue .sc-line::after{
+  content:"";position:absolute;left:0;top:-50%;
+  width:100%;height:50%;background:var(--orange);
+  animation:scrollDown 2.2s ease-in-out infinite;
+}
+@keyframes scrollDown{0%{top:-50%}100%{top:110%}}
+
+.slide-dots{
+  position:absolute;bottom:36px;right:44px;z-index:5;
+  display:flex;gap:8px;align-items:center;
+}
+.slide-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.3);transition:all .4s;cursor:pointer;
+}
+.slide-dot.active{background:var(--orange);transform:scale(1.5)}
+
+/* ── AMENITIES ── */
+.amenities{
+  background:var(--surface);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.amenities-grid{display:grid;grid-template-columns:repeat(6,1fr)}
+.amenity-item{
+  padding:36px 18px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  border-right:1px solid var(--border);text-align:center;
+  cursor:default;transition:background .3s;position:relative;overflow:hidden;
+}
+.amenity-item:last-child{border-right:none}
+.amenity-item::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(240,98,26,.09),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.amenity-item:hover::before{opacity:1}
+.amenity-icon{
+  font-size:30px;transition:transform .45s cubic-bezier(.34,1.56,.64,1);
+}
+.amenity-item:hover .amenity-icon{transform:scale(1.2) rotate(-8deg)}
+.amenity-label{
+  font-family:var(--cond);font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);font-weight:600;
+}
+
+/* ── ABOUT ── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.about-img{
+  position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/5;
+}
+.about-img img{
+  width:100%;height:100%;object-fit:cover;transition:transform .6s;
+}
+.about-img:hover img{transform:scale(1.04)}
+.about-img::before{
+  content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to bottom,transparent 55%,rgba(12,12,12,.7));
+}
+.about-badge{
+  position:absolute;bottom:24px;left:24px;z-index:2;
+  background:var(--orange);color:#fff;
+  padding:11px 18px;border-radius:3px;
+  font-family:var(--cond);font-size:12px;letter-spacing:.15em;font-weight:700;
+}
+.about-text .eyebrow{margin-bottom:16px}
+.about-text h2{margin-bottom:24px}
+.about-text p{color:var(--muted);font-size:16px;line-height:1.78;margin-bottom:18px}
+.about-stats{
+  display:flex;gap:40px;margin-top:40px;
+  padding-top:32px;border-top:1px solid var(--border);
+}
+.about-stat .num{font-family:var(--bebas);font-size:52px;color:var(--orange);line-height:1}
+.about-stat .lbl{
+  font-family:var(--cond);font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-top:4px;
+}
+
+/* ── CLASSES ── */
+.classes-section{background:var(--bg2)}
+.section-header{text-align:center;margin-bottom:64px}
+.section-header .eyebrow{justify-content:center;margin-bottom:16px}
+.section-header p{color:var(--muted);font-size:15px;margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto}
+
+.classes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.class-card{
+  position:relative;overflow:hidden;aspect-ratio:3/4;cursor:pointer;
+}
+.class-card img{
+  width:100%;height:100%;object-fit:cover;transition:transform .6s ease;
+}
+.class-card:hover img{transform:scale(1.08)}
+.class-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(12,12,12,.92) 0%,rgba(12,12,12,.25) 52%,rgba(12,12,12,.08) 100%);
+  transition:background .4s;
+}
+.class-card:hover .class-overlay{
+  background:linear-gradient(to top,rgba(220,70,15,.88) 0%,rgba(12,12,12,.5) 60%,rgba(12,12,12,.08) 100%);
+}
+.class-content{
+  position:absolute;bottom:0;left:0;right:0;padding:32px 26px;z-index:2;
+}
+.class-tag{
+  font-family:var(--cond);font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--orange);font-weight:600;margin-bottom:8px;transition:color .3s;
+}
+.class-card:hover .class-tag{color:rgba(255,255,255,.75)}
+.class-card h3{color:#fff;font-size:clamp(20px,2.5vw,28px);margin-bottom:10px}
+.class-desc{
+  font-size:14px;color:rgba(255,255,255,.62);line-height:1.55;
+  max-height:0;overflow:hidden;transition:max-height .4s,opacity .35s;opacity:0;
+}
+.class-card:hover .class-desc{max-height:90px;opacity:1}
+.class-schedule{
+  font-family:var(--cond);font-size:11px;letter-spacing:.18em;
+  color:rgba(255,255,255,.38);text-transform:uppercase;margin-top:12px;
+}
+
+/* ── COACHES ── */
+.coaches-grid{display:flex;justify-content:center;gap:52px;flex-wrap:wrap}
+.coach-card{
+  width:320px;position:relative;
+  transform-style:preserve-3d;transition:transform .2s;
+}
+.coach-img{
+  width:100%;aspect-ratio:3/4;border-radius:var(--radius);
+  overflow:hidden;position:relative;
+}
+.coach-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.coach-card:hover .coach-img img{transform:scale(1.05)}
+.coach-img::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(12,12,12,.85) 0%,transparent 50%);
+}
+.coach-info{padding:22px 0}
+.coach-name{font-family:var(--bebas);font-size:34px;letter-spacing:.05em;line-height:1}
+.coach-role{
+  font-family:var(--cond);font-size:12px;letter-spacing:.25em;
+  text-transform:uppercase;color:var(--orange);font-weight:600;margin-top:6px;
+}
+.coach-bio{font-size:14px;color:var(--muted);margin-top:14px;line-height:1.68}
+.coach-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.coach-tag{
+  font-family:var(--cond);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  padding:5px 12px;border:1px solid var(--border-strong);border-radius:3px;
+  color:var(--muted);transition:all .2s;
+}
+.coach-card:hover .coach-tag{border-color:var(--orange);color:var(--orange)}
+
+/* ── PRICING ── */
+.pricing-section{background:var(--bg2)}
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  max-width:900px;margin:0 auto;
+}
+.pricing-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:40px 32px;
+  position:relative;overflow:hidden;
+  transition:transform .3s,box-shadow .3s;
+}
+.pricing-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 24px 60px -20px rgba(240,98,26,.35);
+  border-color:var(--orange);
+}
+.pricing-card:hover::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--orange),var(--orange-light));
+}
+.pricing-card.featured{
+  background:linear-gradient(135deg,var(--surface2),var(--surface));
+}
+.pricing-badge{
+  position:absolute;top:18px;right:18px;
+  background:var(--orange);color:#fff;
+  font-family:var(--cond);font-size:10px;letter-spacing:.2em;font-weight:700;
+  text-transform:uppercase;padding:4px 10px;border-radius:2px;
+}
+.pricing-duration{
+  font-family:var(--cond);font-size:11px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--orange);font-weight:600;margin-bottom:18px;
+}
+.pricing-amount{font-family:var(--bebas);font-size:58px;line-height:1;color:var(--text)}
+.pricing-amount .currency{font-size:26px;vertical-align:top;margin-top:10px;display:inline-block;color:var(--muted)}
+.pricing-note{font-size:12px;color:var(--muted2);margin-top:6px;margin-bottom:26px}
+.pricing-features{list-style:none;padding:0;margin:0 0 30px}
+.pricing-features li{
+  font-size:14px;color:var(--muted);padding:9px 0;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  display:flex;align-items:center;gap:10px;
+}
+.pricing-features li:last-child{border-bottom:none}
+.pricing-features li::before{content:"✓";color:var(--orange);font-weight:700;font-size:12px;flex-shrink:0}
+
+/* ── GALLERY ── */
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-auto-rows:280px;
+  gap:4px;
+}
+.gallery-item{
+  position:relative;overflow:hidden;cursor:pointer;
+}
+.gallery-item:nth-child(1){grid-column:span 2}
+.gallery-item:nth-child(5){grid-column:span 2}
+.gallery-item img{
+  width:100%;height:100%;object-fit:cover;transition:transform .5s;
+}
+.gallery-item:hover img{transform:scale(1.07)}
+.gallery-overlay{
+  position:absolute;inset:0;
+  background:rgba(240,98,26,.5);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .35s;
+}
+.gallery-item:hover .gallery-overlay{opacity:1}
+.gallery-overlay svg{width:36px;height:36px;color:#fff}
+
+/* ── CTA SECTION ── */
+.cta-section{
+  background:linear-gradient(135deg,var(--surface) 0%,#1c0e06 100%);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  text-align:center;padding:100px 0;
+}
+.cta-section h2{margin-bottom:20px}
+.cta-section p{color:var(--muted);font-size:16px;max-width:480px;margin:0 auto 40px}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+
+/* ── CONTACT ── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.contact-info .eyebrow{margin-bottom:14px}
+.contact-info h2{margin-bottom:36px}
+.contact-block{margin-bottom:30px}
+.contact-block h4{
+  font-family:var(--cond);font-size:11px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:8px;
+}
+.contact-block p,.contact-block a{font-size:15px;color:var(--muted);line-height:1.7}
+.contact-block a:hover{color:var(--orange)}
+
+.contact-form{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:40px;
+}
+.contact-form h3{
+  font-family:var(--bebas);font-size:28px;letter-spacing:.04em;font-weight:400;
+  margin-bottom:28px;
+}
+.form-row{margin-bottom:20px}
+.form-row label{
+  display:block;font-family:var(--cond);
+  font-size:11px;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px;
+}
+.form-row input,.form-row textarea{
+  width:100%;padding:14px 16px;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:4px;color:var(--text);font-size:15px;
+  transition:border-color .25s;outline:none;font-family:var(--barlow);
+}
+.form-row input:focus,.form-row textarea:focus{border-color:var(--orange)}
+.form-row textarea{min-height:120px;resize:vertical}
+
+/* ── FOOTER ── */
+footer{background:#080808;border-top:1px solid rgba(255,255,255,.06);padding:48px 0}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.footer-logo{font-family:var(--bebas);font-size:20px;letter-spacing:.18em;color:var(--muted)}
+.footer-note{font-size:13px;color:var(--muted2)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:13px;color:var(--muted2);transition:color .2s}
+.footer-links a:hover{color:var(--orange)}
+
+/* ── WA FAB ── */
+.wa-fab{
+  position:fixed;bottom:28px;right:28px;z-index:90;
+  width:58px;height:58px;border-radius:50%;
+  background:#25D366;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(37,211,102,.4);
+  transition:transform .3s,box-shadow .3s;
+  animation:waPulse 3s ease-in-out infinite;
+}
+.wa-fab:hover{transform:scale(1.12);box-shadow:0 12px 36px rgba(37,211,102,.6)}
+.wa-fab svg{width:30px;height:30px;color:#fff}
+@keyframes waPulse{
+  0%,100%{box-shadow:0 8px 24px rgba(37,211,102,.4)}
+  50%{box-shadow:0 8px 40px rgba(37,211,102,.65),0 0 0 10px rgba(37,211,102,.1)}
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(42px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-d1{transition-delay:.15s}
+.reveal-d2{transition-delay:.3s}
+.reveal-d3{transition-delay:.45s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .nav-links{display:none}
+  .menu-toggle{display:inline-flex}
+  .about-grid{grid-template-columns:1fr;gap:48px}
+  .about-img{max-width:480px}
+  .classes-grid{grid-template-columns:1fr;gap:3px}
+  .class-card{aspect-ratio:16/9}
+  .coaches-grid{gap:32px}
+  .pricing-grid{grid-template-columns:1fr;max-width:360px}
+  .contact-grid{grid-template-columns:1fr}
+  .amenities-grid{grid-template-columns:repeat(3,1fr)}
+  .amenity-item:nth-child(3n){border-right:none}
+  .gallery-item:nth-child(1){grid-column:span 1}
+  .gallery-item:nth-child(5){grid-column:span 1}
+}
+@media(max-width:600px){
+  .wrap{padding:0 20px}
+  section{padding:80px 0}
+  h1{font-size:clamp(52px,14vw,80px)}
+  .amenities-grid{grid-template-columns:repeat(2,1fr)}
+  .amenity-item:nth-child(2n){border-right:none}
+  .hero-btns,.cta-btns{flex-direction:column;align-items:stretch}
+  .btn{justify-content:center}
+  .about-stats{gap:24px}
+  .coaches-grid{flex-direction:column;align-items:center}
+  .coach-card{width:100%;max-width:340px}
+  .footer-inner{flex-direction:column;text-align:center}
+  .slide-dots{right:20px}
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ══ NAV ══ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">THE BASE <span class="sep">|</span><span class="loc">UBUD</span></a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#classes">Classes</a>
+      <a href="#coaches">Coaches</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-right">
+      <a class="wa-icon" href="https://wa.me/33629883919" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+      </a>
+      <a href="#pricing" class="btn btn-orange" style="padding:11px 22px;font-size:12px">Join Now</a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Menu"><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ DRAWER ══ -->
+<div class="drawer" id="drawer">
+  <button class="drawer-close" id="drawer-close" aria-label="Close">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l12 12M14 2L2 14"/></svg>
+  </button>
+  <a href="#about" class="dl">About</a>
+  <a href="#classes" class="dl">Classes</a>
+  <a href="#coaches" class="dl">Coaches</a>
+  <a href="#pricing" class="dl">Pricing</a>
+  <a href="#gallery" class="dl">Gallery</a>
+  <a href="#contact" class="dl">Contact</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="top">
+  <div class="hero-slides" id="hero-slides">
+    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1800&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1800&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1800&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=1800&q=80')"></div>
+  </div>
+  <div class="hero-content">
+    <div class="eyebrow">Ubud, Bali · Est. 2019</div>
+    <h1>TRAIN.<em>WORK.</em><br>CONNECT.</h1>
+    <p class="tagline">Community gym &amp; coworking space in the heart of Ubud</p>
+    <div class="hero-btns">
+      <a href="#pricing" class="btn btn-orange">See Membership Plans</a>
+      <a href="#about" class="btn btn-outline">Discover The Base</a>
+    </div>
+  </div>
+  <div class="scroll-cue">
+    <span>Scroll</span>
+    <div class="sc-line"></div>
+  </div>
+  <div class="slide-dots" id="slide-dots">
+    <div class="slide-dot active" data-slide="0"></div>
+    <div class="slide-dot" data-slide="1"></div>
+    <div class="slide-dot" data-slide="2"></div>
+    <div class="slide-dot" data-slide="3"></div>
+  </div>
+</section>
+
+<!-- ══ AMENITIES ══ -->
+<div class="amenities">
+  <div class="amenities-grid">
+    <div class="amenity-item reveal reveal-d1"><div class="amenity-icon">❄️</div><div class="amenity-label">Air Conditioning</div></div>
+    <div class="amenity-item reveal reveal-d2"><div class="amenity-icon">☕</div><div class="amenity-label">Café &amp; Protein Bar</div></div>
+    <div class="amenity-item reveal reveal-d3"><div class="amenity-icon">💻</div><div class="amenity-label">Coworking Space</div></div>
+    <div class="amenity-item reveal reveal-d1"><div class="amenity-icon">📶</div><div class="amenity-label">High-Speed WiFi</div></div>
+    <div class="amenity-item reveal reveal-d2"><div class="amenity-icon">🚿</div><div class="amenity-label">Showers &amp; Lockers</div></div>
+    <div class="amenity-item reveal reveal-d3"><div class="amenity-icon">🏋️</div><div class="amenity-label">Full Equipment</div></div>
+  </div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-img reveal">
+        <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80" alt="The Base Ubud interior" loading="lazy"/>
+        <div class="about-badge">Est. 2019 · Ubud, Bali</div>
+      </div>
+      <div class="about-text">
+        <div class="eyebrow reveal">Our Story</div>
+        <h2 class="reveal reveal-d1">More than<br>a gym.</h2>
+        <p class="reveal reveal-d2">The Base was born from a simple idea: in Ubud, people come from all over the world to slow down, reconnect, and find their rhythm. We built a place where you can train hard in the morning, open your laptop over a protein shake, and share a story with a stranger by noon.</p>
+        <p class="reveal reveal-d2">No mirrors on every wall. No DJ music at 7am. Just solid equipment, cool air, good coffee, and a community that keeps showing up — from Bali locals to digital nomads passing through.</p>
+        <div class="about-stats reveal reveal-d3">
+          <div class="about-stat"><div class="num">6+</div><div class="lbl">Years in Ubud</div></div>
+          <div class="about-stat"><div class="num">3</div><div class="lbl">Training Areas</div></div>
+          <div class="about-stat"><div class="num">7</div><div class="lbl">Days a Week</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CLASSES ══ -->
+<section class="classes-section" id="classes">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="eyebrow reveal">What We Offer</div>
+      <h2 class="reveal reveal-d1">Our Classes</h2>
+      <p class="reveal reveal-d2">Whether you're here for a day or a month, our sessions are open to all levels. No ego, just work.</p>
+    </div>
+    <div class="classes-grid">
+      <div class="class-card reveal">
+        <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80" alt="Free weights" loading="lazy"/>
+        <div class="class-overlay"></div>
+        <div class="class-content">
+          <div class="class-tag">Strength</div>
+          <h3>Free Weights &amp; Machines</h3>
+          <div class="class-desc">Barbells, dumbbells, cables and a full rack setup. Train at your own pace with quality equipment in a no-judgment space.</div>
+          <div class="class-schedule">Open access · 6am – 10pm daily</div>
+        </div>
+      </div>
+      <div class="class-card reveal reveal-d1">
+        <img src="https://images.unsplash.com/photo-1517343985841-f8b2d66e010b?auto=format&fit=crop&w=900&q=80" alt="Functional training" loading="lazy"/>
+        <div class="class-overlay"></div>
+        <div class="class-content">
+          <div class="class-tag">Functional</div>
+          <h3>Functional Training</h3>
+          <div class="class-desc">Kettlebells, TRX, battle ropes and bodyweight circuits. Group sessions every morning — all levels welcome, no experience needed.</div>
+          <div class="class-schedule">Mon · Wed · Fri — 7:30am &amp; 5:30pm</div>
+        </div>
+      </div>
+      <div class="class-card reveal reveal-d2">
+        <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=80" alt="Yoga" loading="lazy"/>
+        <div class="class-overlay"></div>
+        <div class="class-content">
+          <div class="class-tag">Yoga &amp; Mobility</div>
+          <h3>Yoga &amp; Stretching</h3>
+          <div class="class-desc">Flow classes and mobility work to complement your training. Held on our shaded outdoor terrace, facing the rice fields.</div>
+          <div class="class-schedule">Tue · Thu · Sat — 8:00am</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COACHES ══ -->
+<section id="coaches">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="eyebrow reveal">The Team</div>
+      <h2 class="reveal reveal-d1">Our Coaches</h2>
+      <p class="reveal reveal-d2">A small team. A big welcome. They know your name on day one.</p>
+    </div>
+    <div class="coaches-grid">
+      <div class="coach-card reveal" id="coach-1">
+        <div class="coach-img">
+          <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=600&q=80" alt="Wayan – Head Coach" loading="lazy"/>
+        </div>
+        <div class="coach-info">
+          <div class="coach-name">WAYAN</div>
+          <div class="coach-role">Head Coach · Strength &amp; Conditioning</div>
+          <p class="coach-bio">Born and raised in Ubud, Wayan has been training athletes and everyday people for over 8 years. He built The Base because he wanted a space where training felt real — not performative. His philosophy: consistency beats intensity, every time.</p>
+          <div class="coach-tags">
+            <span class="coach-tag">Strength</span>
+            <span class="coach-tag">Conditioning</span>
+            <span class="coach-tag">Beginners</span>
+          </div>
+        </div>
+      </div>
+      <div class="coach-card reveal reveal-d1" id="coach-2">
+        <div class="coach-img">
+          <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" alt="Sarah – Yoga Coach" loading="lazy"/>
+        </div>
+        <div class="coach-info">
+          <div class="coach-name">SARAH</div>
+          <div class="coach-role">Yoga &amp; Mobility Coach</div>
+          <p class="coach-bio">Originally from Melbourne, Sarah landed in Ubud five years ago and never left. She teaches yoga as a tool for recovery and longevity — not as a performance. Her morning classes are the most peaceful 60 minutes your week will see.</p>
+          <div class="coach-tags">
+            <span class="coach-tag">Vinyasa</span>
+            <span class="coach-tag">Mobility</span>
+            <span class="coach-tag">Recovery</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PRICING ══ -->
+<section class="pricing-section" id="pricing">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="eyebrow reveal">Simple &amp; Transparent</div>
+      <h2 class="reveal reveal-d1">Membership Plans</h2>
+      <p class="reveal reveal-d2">No hidden fees. Drop in for a day or stay for a month — you're welcome either way.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div class="pricing-duration">Day Pass</div>
+        <div class="pricing-amount"><span class="currency">IDR </span>80K</div>
+        <div class="pricing-note">≈ $5 USD &nbsp;·&nbsp; one day access</div>
+        <ul class="pricing-features">
+          <li>Full gym access</li>
+          <li>WiFi &amp; coworking space</li>
+          <li>Showers &amp; lockers</li>
+          <li>10% off at the café</li>
+        </ul>
+        <a href="https://wa.me/33629883919" target="_blank" rel="noopener" class="btn btn-outline" style="width:100%;justify-content:center">Book via WhatsApp</a>
+      </div>
+      <div class="pricing-card featured reveal reveal-d1">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-duration">Weekly Pass</div>
+        <div class="pricing-amount"><span class="currency">IDR </span>350K</div>
+        <div class="pricing-note">≈ $22 USD &nbsp;·&nbsp; 7 days access</div>
+        <ul class="pricing-features">
+          <li>Full gym access</li>
+          <li>WiFi &amp; coworking space</li>
+          <li>Showers &amp; lockers</li>
+          <li>1 free group session</li>
+          <li>15% off at the café</li>
+        </ul>
+        <a href="https://wa.me/33629883919" target="_blank" rel="noopener" class="btn btn-orange" style="width:100%;justify-content:center">Book via WhatsApp</a>
+      </div>
+      <div class="pricing-card reveal reveal-d2">
+        <div class="pricing-duration">Monthly Pass</div>
+        <div class="pricing-amount"><span class="currency">IDR </span>950K</div>
+        <div class="pricing-note">≈ $59 USD &nbsp;·&nbsp; 30 days access</div>
+        <ul class="pricing-features">
+          <li>Full gym access</li>
+          <li>WiFi &amp; coworking space</li>
+          <li>Showers &amp; lockers</li>
+          <li>Unlimited group sessions</li>
+          <li>20% off at the café</li>
+          <li>Priority booking for yoga</li>
+        </ul>
+        <a href="https://wa.me/33629883919" target="_blank" rel="noopener" class="btn btn-outline" style="width:100%;justify-content:center">Book via WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GALLERY ══ -->
+<section id="gallery" style="padding:0">
+  <div style="max-width:100%;padding:0">
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1400&q=80" alt="Weights area" loading="lazy"/>
+        <div class="gallery-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80" alt="Coworking" loading="lazy"/>
+        <div class="gallery-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80" alt="Yoga" loading="lazy"/>
+        <div class="gallery-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=800&q=80" alt="Training" loading="lazy"/>
+        <div class="gallery-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1400&q=80" alt="Ubud Bali" loading="lazy"/>
+        <div class="gallery-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section class="cta-section">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="justify-content:center">Ready to start?</div>
+    <h2 class="reveal reveal-d1">Your first session<br>is on us.</h2>
+    <p class="reveal reveal-d2">Come say hi, look around, and train for free on your first visit. No sign-up needed — just show up.</p>
+    <div class="cta-btns reveal reveal-d3">
+      <a href="https://wa.me/33629883919" target="_blank" rel="noopener" class="btn btn-orange">Message us on WhatsApp</a>
+      <a href="#pricing" class="btn btn-outline">View Membership Plans</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="eyebrow reveal">Find Us</div>
+        <h2 class="reveal reveal-d1">Get in<br>touch.</h2>
+        <div class="contact-block reveal reveal-d2">
+          <h4>Address</h4>
+          <p>Jl. Bisma No. 88<br>Ubud, Bali 80571<br>Indonesia</p>
+        </div>
+        <div class="contact-block reveal reveal-d2">
+          <h4>Opening Hours</h4>
+          <p>Monday – Saturday: 6:00am – 10:00pm<br>Sunday: 7:00am – 8:00pm</p>
+        </div>
+        <div class="contact-block reveal reveal-d3">
+          <h4>WhatsApp (preferred)</h4>
+          <a href="https://wa.me/33629883919" target="_blank" rel="noopener">+33 6 29 88 39 19</a>
+        </div>
+        <div class="contact-block reveal reveal-d3">
+          <h4>Instagram</h4>
+          <a href="#">@thebaseubud</a>
+        </div>
+      </div>
+      <div class="contact-form reveal reveal-d2">
+        <h3>Send a message</h3>
+        <div class="form-row">
+          <label>Your Name</label>
+          <input type="text" placeholder="Alex Smith"/>
+        </div>
+        <div class="form-row">
+          <label>Email Address</label>
+          <input type="email" placeholder="alex@example.com"/>
+        </div>
+        <div class="form-row">
+          <label>Message</label>
+          <textarea placeholder="I'll be in Ubud from... I'm interested in the weekly pass..."></textarea>
+        </div>
+        <button class="btn btn-orange" style="width:100%;justify-content:center" onclick="window.open('https://wa.me/33629883919','_blank')">
+          Send via WhatsApp instead →
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-logo">THE BASE UBUD</div>
+      <div class="footer-note">© 2025 The Base Ubud &nbsp;·&nbsp; Ubud, Bali, Indonesia</div>
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#classes">Classes</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ WA FAB ══ -->
+<a class="wa-fab" href="https://wa.me/33629883919" target="_blank" rel="noopener" aria-label="Contact us on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+</a>
+
+<script>
+// ── PROGRESS BAR ──
+const bar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  bar.style.width = pct + '%';
+}, {passive:true});
+
+// ── NAV SCROLL ──
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+}, {passive:true});
+
+// ── MOBILE DRAWER ──
+const drawer = document.getElementById('drawer');
+document.getElementById('menu-toggle').addEventListener('click', () => drawer.classList.add('open'));
+document.getElementById('drawer-close').addEventListener('click', () => drawer.classList.remove('open'));
+drawer.querySelectorAll('.dl').forEach(a => a.addEventListener('click', () => drawer.classList.remove('open')));
+
+// ── HERO SLIDESHOW ──
+const slides = document.querySelectorAll('.hero-slide');
+const dots   = document.querySelectorAll('.slide-dot');
+let current  = 0;
+let interval;
+
+function goTo(idx) {
+  slides[current].classList.remove('active');
+  dots[current].classList.remove('active');
+  current = idx;
+  slides[current].classList.add('active');
+  dots[current].classList.add('active');
+}
+function next() { goTo((current + 1) % slides.length) }
+function start() { interval = setInterval(next, 5500) }
+
+dots.forEach(d => d.addEventListener('click', () => {
+  clearInterval(interval);
+  goTo(parseInt(d.dataset.slide));
+  start();
+}));
+start();
+
+// ── HERO PARALLAX ──
+const heroSlides = document.getElementById('hero-slides');
+window.addEventListener('scroll', () => {
+  if (window.scrollY < window.innerHeight) {
+    heroSlides.style.transform = `translateY(${window.scrollY * 0.28}px)`;
+  }
+}, {passive:true});
+
+// ── SCROLL REVEAL ──
+const revealEls = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+  });
+}, {threshold:0.1, rootMargin:'0px 0px -60px 0px'});
+revealEls.forEach(el => obs.observe(el));
+
+// ── 3D TILT ON COACH CARDS ──
+document.querySelectorAll('.coach-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const r  = card.getBoundingClientRect();
+    const dx = (e.clientX - r.left - r.width  / 2) / (r.width  / 2);
+    const dy = (e.clientY - r.top  - r.height / 2) / (r.height / 2);
+    card.style.transition = 'transform 0.08s ease';
+    card.style.transform  = `perspective(900px) rotateY(${dx * 6}deg) rotateX(${-dy * 6}deg) translateZ(10px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform 0.55s ease';
+    card.style.transform  = '';
+  });
+});
+
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth', block:'start'}); }
+  });
+});
+
+// ── FLOATING LABEL ANIMATION ON FORM ──
+document.querySelectorAll('.form-row input, .form-row textarea').forEach(el => {
+  el.addEventListener('focus', () => el.style.background = 'rgba(240,98,26,0.04)');
+  el.addEventListener('blur',  () => el.style.background = 'rgba(255,255,255,0.04)');
+});
+</script>
+</body>
+</html>
