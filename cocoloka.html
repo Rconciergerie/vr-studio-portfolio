@@ -444,6 +444,26 @@
       .gallery-item { height: 260px; }
       .hero h1 { font-size: 2.5rem; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* Nav mobile : logo + Reserve uniquement */
+      .nav-links a:not(.nav-cta) { display: none; }
+      .nav-links { gap: 0; }
+
+      /* Menu tabs : scroll horizontal */
+      .menu-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+        padding: 0 1.5rem;
+      }
+      .menu-tabs::-webkit-scrollbar { display: none; }
+      .tab-btn {
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
     }
   </style>
 </head>
