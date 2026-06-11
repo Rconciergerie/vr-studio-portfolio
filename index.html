@@ -526,6 +526,13 @@
       .hero-center-gap { display: none; }
       .hero-brand { top: clamp(80px, 18%, 130px); }
 
+      /* Stats : grille 2×2 forcée (évite le wrap 3+1 en anglais) */
+      .stats-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px 16px;
+      }
+
       /* Cartes : 1 colonne */
       .cards-grid { grid-template-columns: 1fr; max-width: 480px; }
 
@@ -533,6 +540,19 @@
       .app-inner { flex-direction: column-reverse; text-align: center; }
       .app-text { display: flex; flex-direction: column; align-items: center; }
       .app-text p { max-width: 100%; }
+
+      /* Image iPhone : taille adaptée + pas de 3D transform */
+      .app-img-wrap {
+        flex: none;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+      }
+      .app-img {
+        transform: none;
+        filter: drop-shadow(0 20px 40px rgba(0,140,255,.30));
+      }
+      .app-img-wrap:hover .app-img { transform: none; }
     }
 
   </style>
